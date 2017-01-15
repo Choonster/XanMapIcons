@@ -108,11 +108,14 @@ function Base_HookManagerMixin:UpdateIcon(unit, isInRaid, timeNow)
 		end
 	end
 
-	BattlefieldMinimapUnitPositionFrame:AddUnit(unit, texture, 8, 8, r, g, b, 1)
+	local groupMemberSize = self:GetGroupMemberSize()
+
+	self.unitPositionFrame:AddUnit(unit, texture, groupMemberSize, groupMemberSize, r, g, b, 1)
 end
 
 -- Implementations that extend Base_HookManagerMixin must provide the following methods:
 -- :ShowPlayers()
+-- :GetGroupMemberSize()
 
 ------------------------------
 --      World Map Mixin     --
@@ -126,6 +129,10 @@ end
 
 function WorldMap_HookManagerMixin:ShowPlayers()
 	return true
+end
+
+function WorldMap_HookManagerMixin:GetGroupMemberSize()
+	return self.unitPositionFrame:GetGroupMemberSize()
 end
 
 local function CreateWorldMap_HookManager()
@@ -146,6 +153,10 @@ end
 
 function BattlefieldMinimap_HookManagerMixin:ShowPlayers()
 	return BattlefieldMinimapOptions.showPlayers
+end
+
+function BattlefieldMinimap_HookManagerMixin:GetGroupMemberSize()
+	return 8
 end
 
 local function CreateBattlefieldMinimap_HookManager()
