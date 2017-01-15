@@ -89,6 +89,12 @@ function Base_HookManagerMixin:UpdateIcon(unit, isInRaid, timeNow)
 
 	--set colors, flash if in combat
 	local t = RAID_CLASS_COLORS[class]
+	if t then
+		r, g, b = t.r, t.g, t.b --class color
+	else
+		r, g, b = 0.8, 0.8, 0.8 --grey for default
+	end
+
 	if (GetTime() % 1 < 0.5) then
 		if UnitAffectingCombat(unit) then
 			r, g, b = 0.8, 0, 0 --red flash, unit in combat
@@ -97,10 +103,6 @@ function Base_HookManagerMixin:UpdateIcon(unit, isInRaid, timeNow)
 		elseif GetIsPVPInactive(unit, timeNow) then
 			r, g, b = 0.5, 0.2, 0.8 --purple for inactives
 		end
-	elseif t then
-		r, g, b = t.r, t.g, t.b --class color
-	else
-		r, g, b = 0.8, 0.8, 0.8 --grey for default
 	end
 
 	BattlefieldMinimapUnitPositionFrame:AddUnit(unit, texture, 8, 8, r, g, b, 1)
