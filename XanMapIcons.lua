@@ -22,6 +22,14 @@ local GetRaidRosterInfo = GetRaidRosterInfo
 local UnitAffectingCombat = UnitAffectingCombat
 local UnitIsDeadOrGhost = UnitIsDeadOrGhost
 
+local function replaceMethod(self, frame, methodName)
+	local original = frame[methodName]
+
+	frame[methodName] = function() end
+
+	self[methodName] = function(self, ...) original(frame, ...) end
+end
+
 ------------------------------
 --        Base Mixin        --
 ------------------------------
@@ -31,15 +39,8 @@ local Base_HookManagerMixin = {}
 function Base_HookManagerMixin:OnLoad(unitPositionFrame, onUpdateFrame)
 	self.unitPositionFrame = unitPositionFrame
 
-	-- Store a reference to the original UnitPositionFrame:FinalizeUnits method
-	local FinalizeUnits = unitPositionFrame.FinalizeUnits
-
-	-- Replace the method so the vanilla UI can't call it
-	unitPositionFrame.FinalizeUnits = function() end
-
-	function self:FinalizeUnits()
-		FinalizeUnits(unitPositionFrame)
-	end
+	replaceMethod(self, unitPositionFrame, "FinalizeUnits")
+	replaceMethod(self, unitPositionFrame, "UpdateTooltips")
 
 	onUpdateFrame:HookScript("OnUpdate", function(onUpdateFrame, elapsed)
 		self:OnUpdate(elapsed)
@@ -71,6 +72,8 @@ function Base_HookManagerMixin:OnUpdate(elapsed)
 	end
 
 	self:FinalizeUnits()
+
+	self:UpdateTooltips(GameTooltip)
 end
 
 function Base_HookManagerMixin:UpdateIcon(unit, isInRaid, timeNow)
