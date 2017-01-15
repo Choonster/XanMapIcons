@@ -71,7 +71,7 @@ function Base_HookManagerMixin:OnUpdate(elapsed)
 		for i = 1, memberCount do
 			local unit = unitBase..i
 			if UnitExists(unit) and not UnitIsUnit(unit, "player") then
-				self:UpdateIcon(unit, isInRaid, timeNow)
+				self:AddGroupIcon(unit, isInRaid, timeNow)
 			end
 		end
 	end
@@ -81,7 +81,7 @@ function Base_HookManagerMixin:OnUpdate(elapsed)
 	self:UpdateTooltips(GameTooltip)
 end
 
-function Base_HookManagerMixin:UpdateIcon(unit, isInRaid, timeNow)
+function Base_HookManagerMixin:AddGroupIcon(unit, isInRaid, timeNow)
 	local _, class = UnitClass(unit)
 	if not class then return end
 
