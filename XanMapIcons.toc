@@ -1,7 +1,7 @@
-## Interface: 40000
+## Interface: 70100
 ## Title: XanMapIcons
 ## Notes: Improved raid/party group icons for the regular and battlefield map.
-## Author: Xruptor
-## Version: 1.2
+## Author: Xruptor, Updates by Choonster
+## Version: 1.3
 
 XanMapIcons.lua
