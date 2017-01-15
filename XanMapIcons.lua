@@ -51,6 +51,11 @@ function Base_HookManagerMixin:OnUpdate(elapsed)
 	if self:ShowPlayers() then
 		-- Adapted from UpdatePlayerPositions (in WorldMapFrame.lua) and BattlefieldMinimap_OnUpdate
 		local timeNow = GetTime()
+
+		self.unitPositionFrame:ClearUnits()
+
+		self:AddPlayerIcon(timeNow)
+
 		local isInRaid = IsInRaid()
 		local memberCount = 0
 		local unitBase
@@ -116,6 +121,7 @@ end
 -- Implementations that extend Base_HookManagerMixin must provide the following methods:
 -- :ShowPlayers()
 -- :GetGroupMemberSize()
+-- :AddPlayerIcon(timeNow)
 
 ------------------------------
 --      World Map Mixin     --
@@ -133,6 +139,12 @@ end
 
 function WorldMap_HookManagerMixin:GetGroupMemberSize()
 	return self.unitPositionFrame:GetGroupMemberSize()
+end
+
+function WorldMap_HookManagerMixin:AddPlayerIcon(timeNow)
+	local r, g, b = CheckColorOverrideForPVPInactive("player", timeNow, 1, 1, 1)
+	local playerArrowSize = self.unitPositionFrame:GetPlayerArrowSize()
+	self.unitPositionFrame:AddUnit("player", "Interface\\WorldMap\\WorldMapArrow", playerArrowSize, playerArrowSize, r, g, b, 1, 7, true)
 end
 
 local function CreateWorldMap_HookManager()
@@ -157,6 +169,10 @@ end
 
 function BattlefieldMinimap_HookManagerMixin:GetGroupMemberSize()
 	return 8
+end
+
+function BattlefieldMinimap_HookManagerMixin:AddPlayerIcon(timeNow)
+	self.unitPositionFrame:AddUnit("player", "Interface\\Minimap\\MinimapArrow", 24, 24, 1, 1, 1, 1, 7, true)
 end
 
 local function CreateBattlefieldMinimap_HookManager()
